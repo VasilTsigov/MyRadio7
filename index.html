@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0d0d1a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="myRadio7">
+  <meta name="description" content="myRadio7 - Слушай хиляди радио станции онлайн">
+  <title>myRadio7</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <header id="app-header">
+      <div class="header-inner">
+        <span class="logo-text">my<span class="logo-accent">Radio</span>7</span>
+        <div class="header-actions">
+          <span id="now-playing-badge" class="now-playing-badge hidden">LIVE</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Views -->
+    <main id="main-content">
+      <div id="view-home" class="view active"></div>
+      <div id="view-search" class="view"></div>
+      <div id="view-favorites" class="view"></div>
+    </main>
+
+    <!-- Mini Player -->
+    <div id="mini-player" class="mini-player hidden">
+      <div class="mini-player-inner" id="mini-player-expand">
+        <div class="mini-logo-wrap">
+          <img id="mini-logo" src="" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="mini-logo-fallback" style="display:none">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v9.28a4.39 4.39 0 0 0-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+          </div>
+        </div>
+        <div class="mini-info">
+          <div id="mini-name" class="mini-name">Изберете станция</div>
+          <div id="mini-meta" class="mini-meta">---</div>
+        </div>
+        <div class="mini-controls">
+          <div id="mini-loading" class="spinner hidden"></div>
+          <button id="mini-play-btn" class="icon-btn" aria-label="Play/Pause">
+            <svg id="mini-play-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="mini-progress"></div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottom-nav">
+      <button class="nav-btn active" data-view="home" aria-label="Начало">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Начало</span>
+      </button>
+      <button class="nav-btn" data-view="search" aria-label="Търсене">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <span>Търсене</span>
+      </button>
+      <button class="nav-btn" data-view="favorites" aria-label="Любими">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span>Любими</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Full Player Overlay -->
+  <div id="full-player" class="full-player hidden" aria-modal="true" role="dialog">
+    <div class="fp-bg"></div>
+    <div class="fp-content">
+      <div class="fp-header">
+        <button id="fp-close" class="icon-btn" aria-label="Затвори">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </button>
+        <span class="fp-title">Сега свири</span>
+        <button id="fp-fav-btn" class="icon-btn" aria-label="Добави в любими">
+          <svg id="fp-fav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
+        </button>
+      </div>
+
+      <div class="fp-artwork-wrap">
+        <div class="fp-artwork">
+          <img id="fp-logo" src="" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="fp-logo-fallback" style="display:none">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="40" fill="#1e1e35"/>
+              <path d="M40 18v18.56a8.78 8.78 0 0 0-3-.56C33.02 36 30 39.02 30 42.5S33.02 49 36.5 49c4.62 0 8.4-3.51 8.9-8H46V22h8V18H40z" fill="#ff4757"/>
+            </svg>
+          </div>
+          <div class="radio-waves" id="radio-waves">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fp-info">
+        <h2 id="fp-name">Станция</h2>
+        <p id="fp-meta">Жанр &bull; Страна</p>
+        <div id="fp-nowplaying" class="fp-nowplaying hidden">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v9.28a4.39 4.39 0 0 0-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+          <span id="fp-nowplaying-text"></span>
+        </div>
+        <p id="fp-bitrate" class="fp-bitrate"></p>
+      </div>
+
+      <div class="fp-controls">
+        <div class="fp-loading-wrap">
+          <div id="fp-spinner" class="spinner hidden"></div>
+          <div id="fp-status" class="fp-status">LIVE</div>
+        </div>
+
+        <button id="fp-play-btn" class="fp-play-btn" aria-label="Play/Pause">
+          <svg id="fp-play-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </button>
+
+        <div class="volume-wrap">
+          <svg viewBox="0 0 24 24" fill="currentColor" class="vol-icon-sm"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/><path d="M5 9v6h4l5 5V4L9 9H5z"/></svg>
+          <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="80" aria-label="Сила на звука">
+        </div>
+      </div>
+
+      <div id="fp-error" class="fp-error hidden">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="fp-error-text">Грешка при свързване</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+  <script src="/js/nowplaying.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/favorites.js"></script>
+  <script src="/js/player.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0d0d1a"/>
+  <circle cx="256" cy="256" r="180" fill="none" stroke="#ff4757" stroke-width="12" opacity="0.15"/>
+  <circle cx="256" cy="256" r="130" fill="none" stroke="#ff4757" stroke-width="12" opacity="0.25"/>
+  <circle cx="256" cy="256" r="80" fill="none" stroke="#ff4757" stroke-width="12" opacity="0.4"/>
+  <!-- Radio note / music symbol -->
+  <path d="M256 140v108.28a42 42 0 0 0-15-.28C220.1 248 204 264.1 204 283.5S220.1 319 239.5 319c22.09 0 40.1-16.74 42.45-38.1H284V180h38V140h-66z" fill="#ff4757"/>
+</svg>
